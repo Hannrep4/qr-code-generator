@@ -1,0 +1,43 @@
+Dockerization Reflection: QR Code Generator Project
+
+This project gave me practical experience turning a local Python script into a portable, reproducible containerized application. The most valuable part of the process was seeing the difference between "works on my machine" and "works in a clean runtime." Docker forced me to define exactly what the app needs and how it should run.
+
+Key Experiences
+
+1. Building the first Docker image
+Creating the Dockerfile helped me understand the full startup flow: choose a base image, set the working directory, copy files, install dependencies, and define container startup behavior. Using a slim Python image also reinforced the idea of keeping images lightweight.
+
+2. Using ENTRYPOINT and CMD correctly
+I learned how ENTRYPOINT and CMD work together. ENTRYPOINT was used to lock in the command that runs the app, while CMD provided default arguments that can still be overridden at runtime. This made the container both predictable and flexible.
+
+3. Persisting generated files with volume mounts
+Since the app generates QR code images, mounting a host folder to /app/qr_codes was important. This made output files easy to access on the host and prevented data loss when containers stop.
+
+4. Integrating CI with GitHub Actions
+Adding a workflow to install dependencies, validate imports, and build the Docker image made the project more production-ready. Automated checks increased confidence that future changes would not break the build.
+
+Main Challenges Faced
+
+1. Missing dependencies during container runtime
+The biggest issue was runtime failure caused by missing packages in requirements.txt (qrcode, python-dotenv, validators). The app worked in development context, but the container exposed missing explicit dependency declarations.
+
+2. Understanding container lifecycle and logs
+At one point, docker logs failed because the container name did not exist. This happened due to container naming/removal behavior and short-lived execution. Learning to use consistent container names and inspect running/stopped containers was important for debugging.
+
+3. Branch and workflow visibility confusion
+Because the repository used master while the default branch was main, I had to pay attention to workflow triggers and where successful runs appear. This taught me to align branch strategy with CI configuration to avoid confusion.
+
+4. Balancing security and usability in Dockerfile
+Running as a non-root user improves security, but it also requires correct ownership and permissions for directories like logs and qr_codes. This was a useful tradeoff to address early.
+
+What I Learned
+
+- Containers make environment setup explicit and reproducible.
+- Dependency management must be complete and accurate; otherwise containers fail fast.
+- Volume mounts are essential for apps that generate artifacts.
+- CI workflows are part of Dockerization maturity, not just optional extras.
+- Debugging containers requires familiarity with image tags, container names, logs, and lifecycle states.
+
+Overall Reflection
+
+This Dockerization process improved both my technical skills and my development discipline. The project moved from a script that runs locally to an application that can be built, run, tested, and shared across environments. The challenges I hit were useful because they exposed weak points in dependency tracking, runtime assumptions, and deployment workflow.
