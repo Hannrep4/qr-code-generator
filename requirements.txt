@@ -3,3 +3,6 @@ Django==5.2
 networkx==3.5
 sqlparse==0.5.3
 tzdata==2025.2
+qrcode[pil]==8.0
+python-dotenv==1.0.1
+validators==0.34.0
